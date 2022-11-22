@@ -25,10 +25,11 @@ const alertOptionsInIt = ref<AlertPlugConfig>({} as any)
 
 export const alertPlug = (alertOptions:AlertOptions = {}) => {
     return (async ()=>{
-        const options = await alertOptionsInIt.value?.defineConfig?.(merge({
+        const optionsMerge = merge({
             showCloseIcon:true,
             showTitle:true,
-        },  alertOptions))
+        },  alertOptions)
+        const options = await alertOptionsInIt.value?.defineConfig?.(optionsMerge) || optionsMerge
         const config = merge({
             showFooter:false,
             content:options.component ? h(defineComponent({
