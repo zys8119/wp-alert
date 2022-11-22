@@ -1,0 +1,7 @@
+.van-popup--bottom {
+    bottom: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    top: initial !important;
+    transform:initial !important;
+}

@@ -1,6 +1,6 @@
 <template>
     <div class="AlertFooter">
-        <wp-button v-if="!hiddenConfirm" @click="onCancel">取消</wp-button>
+        <wp-button v-if="!hiddenCancel" @click="onCancel">取消</wp-button>
         <wp-button v-if="!hiddenConfirm" type="primary" @click="onConfirm">保存</wp-button>
         <slot/>
     </div>

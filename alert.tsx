@@ -1,102 +1,120 @@
-import {App, h, ref, defineComponent, defineAsyncComponent} from 'vue'
+import {h, ref, defineComponent, defineAsyncComponent} from 'vue'
 import {Dialog, DialogOptions, closeAllModals, ModalProps, WpButton, Toast} from 'wisdom-plus'
 import {merge} from 'lodash'
 import CommonModalHeader from './CommonModalHeader.vue'
 import AlertFooter from './AlertFooter.vue'
 import AlertContent from './AlertContent.vue'
+import "./style.css"
 export interface AlertPlugConfig {
-    defineComponent?(config: any):void
+    defineComponent?(config: AlertOptions):void
+    defineConfig?(config: AlertOptions):AlertOptions
+    onConfirm?(ev:MouseEvent):Promise<void> | void
+    onCancel?(ev:MouseEvent):Promise<void> | void
 }
+
+/**
+ * 自定义弹框选项
+ */
+export interface CustomAlertOptions{
+}
+
+
+export type AlertOptions = Partial<DialogOptions & AlertOptionsConfig & CustomAlertOptions>
 
 const alertOptionsInIt = ref<AlertPlugConfig>({} as any)
-export const alertPlug = (alertOptions:Partial<DialogOptions & AlertOptions> = {}) => {
-    const options = merge({
-        showCloseIcon:true,
-        showTitle:true,
-    }, alertOptions)
-    const config = merge({
-        showFooter:false,
-        content:options.component ? h(defineComponent({
-            setup() {
-                return () => [
-                    options.showTitle ? h(CommonModalHeader, {
-                        // title:options.title,
-                        showClose:options.showCloseIcon,
-                        onClose:() => {
-                            alertPlug.close()
-                        },
-                    }, {
-                        title:() => Object.prototype.toString.call(options.title) === '[object Object]' ? h(options.title) : options.title
-                    }) : null,
-                    h(Object.prototype.toString.call(options.component) === '[object Promise]' ? defineAsyncComponent(() => options.component) as any : options.component, merge({
-                        title:options.props,
-                    }, options.props), options.children),
-                ]
-            }
-        })) : options.content
-    }, options, {
-        title:false,
-        showCloseIcon:true,
-        props:merge({
-            class:'common-wp-modal',
-            showClose:false,
-            width:'700px',
-        }, options.modalProps)
-    }, options.alert ? {
-        title:options.title || '温馨提示',
-        props:{
-            width:400,
-        },
-        content:h(defineComponent({
-            setup() {
-                return () => [
-                    h('div', {
-                        class:{
-                            'p-a-15':true
-                        }
-                    }, options.content),
-                    h(AlertFooter, {
-                        hiddenCancel:true,
-                        hiddenConfirm:true,
-                    }, () => [
-                        h(WpButton, {
-                            onClick:ev => {
-                                (async() => {
-                                    try {
-                                        await options.onCancel?.(ev)
-                                        await alertPlug.close()
-                                    } catch (e) {
-                                        // err
-                                    }
-                                })()
-                            }
+
+export const alertPlug = (alertOptions:AlertOptions = {}) => {
+    return (async ()=>{
+        const options = await alertOptionsInIt.value?.defineConfig?.(merge({
+            showCloseIcon:true,
+            showTitle:true,
+        },  alertOptions))
+        const config = merge({
+            showFooter:false,
+            content:options.component ? h(defineComponent({
+                setup() {
+                    return () => [
+                        options.showTitle ? h(CommonModalHeader, {
+                            // title:options.title,
+                            showClose:options.showCloseIcon,
+                            onClose:() => {
+                                alertPlug.close()
+                            },
                         }, {
-                            default:() => '取消'
-                        }),
-                        h(WpButton, {
-                            type:'primary',
-                            onClick:ev => {
-                                (async() => {
-                                    try {
-                                        await options.onConfirm?.(ev)
-                                        await alertPlug.close()
-                                    } catch (e) {
-                                        // err
-                                    }
-                                })()
+                            title:() => Object.prototype.toString.call(options.title) === '[object Object]' ? h(options.title) : options.title
+                        }) : null,
+                        h(Object.prototype.toString.call(options.component) === '[object Promise]' ? defineAsyncComponent(() => options.component) as any : options.component, merge({
+                            title:options.props,
+                        }, options.props), options.children),
+                    ]
+                }
+            })) : options.content
+        }, options, {
+            title:false,
+            showCloseIcon:true,
+            props:merge({
+                class:'common-wp-modal',
+                showClose:false,
+                width:'700px',
+            }, options.modalProps)
+        }, options.alert ? {
+            title:options.title || '温馨提示',
+            props:{
+                width:400,
+            },
+            content:h(defineComponent({
+                setup() {
+                    return () => [
+                        h('div', {
+                            class:{
+                                'p-a-15':true
                             }
-                        }, {
-                            default:() => '确定'
-                        })
-                    ]),
-                ]
-            }
-        }))
-    } : {})
-    return alertOptionsInIt.value.defineComponent?.(config as any)
+                        }, options.content),
+                        h(AlertFooter, {
+                            hiddenCancel:options.hiddenCancel,
+                            hiddenConfirm:options.hiddenConfirm,
+                        }, () => [
+                            h(WpButton, {
+                                onClick:ev => {
+                                    (async() => {
+                                        try {
+                                            await alertOptionsInIt.value?.onCancel?.(ev)
+                                            await options.onCancel?.(ev)
+                                            await alertPlug.close()
+                                        } catch (e) {
+                                            // err
+                                        }
+                                    })()
+                                }
+                            }, {
+                                default:() => '取消'
+                            }),
+                            h(WpButton, {
+                                type:'primary',
+                                onClick:ev => {
+                                    (async() => {
+                                        try {
+                                            await alertOptionsInIt.value?.onConfirm?.(ev)
+                                            await options.onConfirm?.(ev)
+                                            await alertPlug.close()
+                                        } catch (e) {
+                                            // err
+                                        }
+                                    })()
+                                }
+                            }, {
+                                default:() => '确定'
+                            })
+                        ]),
+                    ]
+                }
+            }))
+        } : {})
+        return await alertOptionsInIt.value.defineComponent?.(config as any) as void
+    })()
 }
 
-alertPlug.install = (app: App<Element>, options:AlertPlugConfig = {}) => {
+alertPlug.install = (app, options:AlertPlugConfig = {}) => {
     alertOptionsInIt.value = merge<AlertPlugConfig, AlertPlugConfig>({
         defineComponent(config:any) {
             return Dialog(config)
@@ -115,11 +133,13 @@ alertPlug.install = (app: App<Element>, options:AlertPlugConfig = {}) => {
 alertPlug.close = () => {
     closeAllModals()
 }
-interface AlertOptions {
+interface AlertOptionsConfig {
     onConfirm?:(ev:MouseEvent)=>(Promise<void> | void)
     onCancel?:(ev:MouseEvent)=>(Promise<void> | void)
     content?:any
     alert?:boolean
+    hiddenCancel?:boolean
+    hiddenConfirm?:boolean
     component?:any
     title?:any
     showCloseIcon?:boolean
