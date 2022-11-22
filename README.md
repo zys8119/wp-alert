@@ -4,6 +4,8 @@ wp-alert 弹框插件
 
 ## 使用教程
 
+`npm i wp-alert`
+
 ### pc方式
 
 1、main.ts
