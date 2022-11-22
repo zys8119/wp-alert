@@ -35,7 +35,7 @@ export const alertPlug = (alertOptions:AlertOptions = {}) => {
             content:options.component ? h(defineComponent({
                 setup() {
                     return () => [
-                        options.showTitle ? h(CommonModalHeader, {
+                        options.showTitle ? h(CommonModalHeader as any, {
                             // title:options.title,
                             showClose:options.showCloseIcon,
                             onClose:() => {
@@ -71,7 +71,7 @@ export const alertPlug = (alertOptions:AlertOptions = {}) => {
                                 'p-a-15':true
                             }
                         }, options.content),
-                        h(AlertFooter, {
+                        h(AlertFooter as any, {
                             hiddenCancel:options.hiddenCancel,
                             hiddenConfirm:options.hiddenConfirm,
                         }, () => [
@@ -115,7 +115,7 @@ export const alertPlug = (alertOptions:AlertOptions = {}) => {
     })()
 }
 
-alertPlug.install = (app, options:AlertPlugConfig = {}) => {
+alertPlug.install = (app:any, options:AlertPlugConfig = {}) => {
     alertOptionsInIt.value = merge<AlertPlugConfig, AlertPlugConfig>({
         defineComponent(config:any) {
             return Dialog(config)
