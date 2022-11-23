@@ -27,11 +27,11 @@ const onConfirm = async(evt: MouseEvent) => {
     const fn = (vm?.vnode?.props as Record<string, any>)?.onSave
     try {
         const fnRes = await fn?.(evt)
-        if (typeof fnRes !== 'boolean') {
+        if (typeof fnRes === 'boolean') {
             window.$alert.close()
         }
     } catch (e) {
-        window.$alert.close()
+        // err
     }
 }
 </script>
