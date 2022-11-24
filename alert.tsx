@@ -108,7 +108,7 @@ export const alertPlug = (alertOptions:AlertOptions = {}) => {
                             }, {
                                 default:() => options.confirmText || '确定'
                             })
-                        ] : null),
+                        ] : undefined),
                     ]
                 }
             }))
