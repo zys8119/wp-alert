@@ -156,7 +156,7 @@ export default defineConfig({
             @add="add"
             @save="$emit('save')"
         >
-            <template #="{formData}">
+            <template #default="{formData}">
                 <wp-input v-model="formData.name" :disabled="isView" />
             </template>
         </AlertContentForm>
