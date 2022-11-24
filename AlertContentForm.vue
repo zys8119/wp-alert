@@ -16,12 +16,12 @@ import {FormDataMapType, ConfigType} from "./index"
 import {getCurrentInstance, ref, provide, defineProps, defineEmits} from "vue"
 const vm = getCurrentInstance()
 const props = defineProps<{
-    row:any
-    isView:boolean
+    row?:any
+    isView?:boolean
     config:FormDataMapType,
-    successMessage:string
-    footerProps:any
-    initData:any
+    successMessage?:string
+    footerProps?:any
+    initData?:any
 }>()
 
 const formDataMap = ref <FormDataMapType>(props.config)
