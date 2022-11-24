@@ -90,3 +90,118 @@ export default defineConfig({
     ]
 })
 ```
+
+## 内置组件介绍
+
+### AlertContent.vue
+
+弹框内容
+
+#### Slot
+
+| 名称      | 描述   |
+|---------|------|
+| default | 默认插槽 |
+
+### AlertFooter.vue
+
+弹框内容
+
+#### Props
+
+| 名称      | 描述     |
+|---------|--------|
+| hiddenCancel | 隐藏取消按钮 |
+| hiddenConfirm | 隐藏确定按钮 |
+| cancelText | 取消按钮文字 |
+| confirmText | 确定按钮文字 |
+
+#### Slot
+
+| 名称      | 描述   |
+|---------|------|
+| default | 默认插槽 |
+
+### AlertContentForm.vue
+
+弹框内容
+
+#### Props
+
+| 名称      | 描述                       |
+|---------|--------------------------|
+| row | 隐藏取消按钮                   |
+| isView | 隐藏确定按钮                   |
+| config | 表单配置：请参考示例               |
+| successMessage | 成功回调提示语                  |
+| footerProps | 尾部参数， 请参考：AlertFooter.vue |
+| initData | 初始数据                     |
+
+#### Slot
+
+| 名称      | 描述       |
+|---------|----------|
+| default | 表单内容默认插槽 |
+| footer | footer插槽 |
+
+#### 使用示例：
+
+```vue
+<template>
+    <div class="AddFzlly">
+        <AlertContentForm
+            v-bind="$props"
+            :config="config"
+            @edit="edit"
+            @add="add"
+            @save="$emit('save')"
+        >
+            <template #="{formData}">
+                <wp-input v-model="formData.name" :disabled="isView" />
+            </template>
+        </AlertContentForm>
+    </div>
+</template>
+
+<script setup lang="ts">
+import {ref} from "vue"
+const props = defineProps<{
+    row:any
+    isView:boolean
+}>()
+
+/**
+ * 表单配置
+ */
+const config = ref({
+    'name': '请输入姓名',
+    'phone': {
+        msg:'请输入联系方式',
+        check:(value:any) => !/1[0-9]{10}/.test(value) ? '手机号格式错误' : null
+    },
+    'sex': '请选择性别',
+    'area': '请选择所属地区',
+    'state': '请设置绑定状态',
+})
+
+/**
+ * 编辑数据
+ * @param data 表单数据
+ * @param row 当前数据
+ */
+const edit = (data:any, row:any) => {
+    // 调用修改数据接口
+    // window.api.***
+}
+
+/**
+ * 创建数据
+ * @param data 表单数据
+ */
+const add = (data:any) => {
+    // 调用创建数据接口
+    // window.api.***
+}
+</script>
+
+```

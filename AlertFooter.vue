@@ -10,7 +10,6 @@
 import {WpButton} from "wisdom-plus"
 import {defineProps, getCurrentInstance} from "vue"
 const props = defineProps<{
-    alert?:boolean
     hiddenCancel?:boolean
     hiddenConfirm?:boolean
     cancelText?:boolean

@@ -10,6 +10,9 @@
 </template>
 
 <script setup lang="ts">
+import AlertContent from "./AlertContent.vue"
+import AlertFooter from "./AlertFooter.vue"
+import {FormDataMapType, ConfigType} from "./index"
 import {getCurrentInstance, ref, provide, defineProps, defineEmits} from "vue"
 const vm = getCurrentInstance()
 const props = defineProps<{
@@ -20,18 +23,14 @@ const props = defineProps<{
     footerProps:any
     initData:any
 }>()
-type FromDataMapType = {
-    msg:string
-    check?:(value:any)=> any
-}
-type FormDataMapType = Record<string, FromDataMapType | string>
+
 const formDataMap = ref <FormDataMapType>(props.config)
 const formData = ref<any>((Object as any).fromEntries(Object.keys(formDataMap.value).map((e:any) => [e, ((props.row || {})[e]) || ((props.initData || {})[e])])))
 
 const emit = defineEmits(['save', 'add', 'edit'])
 const save = async() => {
     const isNotVerifyKeyName:string = Object.keys(formData.value).find((k:any) => !formData.value[k] || (formDataMap.value[k] as any)?.check?.(formData.value[k])) as string
-    const {msg, check} = formDataMap.value[isNotVerifyKeyName] as FromDataMapType || {}
+    const {msg, check} = formDataMap.value[isNotVerifyKeyName] as ConfigType || {}
     const value = formData.value[isNotVerifyKeyName]
     const checkMsg = check?.(value)
     if (isNotVerifyKeyName || checkMsg) {

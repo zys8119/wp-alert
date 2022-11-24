@@ -12,3 +12,9 @@ export {
     AlertContent,
     AlertContentForm,
 }
+
+export type ConfigType = {
+    msg:string
+    check?:(value:any)=> any
+}
+export type FormDataMapType = Record<string, ConfigType | string>
