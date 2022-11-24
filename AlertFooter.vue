@@ -1,7 +1,7 @@
 <template>
     <div class="AlertFooter">
-        <wp-button v-if="!hiddenCancel" @click="onCancel">取消</wp-button>
-        <wp-button v-if="!hiddenConfirm" type="primary" @click="onConfirm">保存</wp-button>
+        <wp-button v-if="!hiddenCancel" @click="onCancel">{{cancelText || '取消'}}</wp-button>
+        <wp-button v-if="!hiddenConfirm" type="primary" @click="onConfirm">{{confirmText || '取消'}}</wp-button>
         <slot/>
     </div>
 </template>
@@ -13,6 +13,8 @@ const props = defineProps<{
     alert?:boolean
     hiddenCancel?:boolean
     hiddenConfirm?:boolean
+    cancelText?:boolean
+    confirmText?:boolean
 }>()
 const emits = defineEmits<{
     (event: 'cancel', evt: MouseEvent): any

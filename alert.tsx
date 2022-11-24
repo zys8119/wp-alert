@@ -72,9 +72,11 @@ export const alertPlug = (alertOptions:AlertOptions = {}) => {
                             }
                         }, options.content),
                         h(AlertFooter as any, {
-                            hiddenCancel:options.hiddenCancel,
-                            hiddenConfirm:options.hiddenConfirm,
-                        }, () => [
+                            hiddenCancel:options.alert || options.hiddenCancel,
+                            hiddenConfirm:options.alert || options.hiddenConfirm,
+                            cancelText:options.cancelText,
+                            confirmText:options.confirmText,
+                        }, options.alert ? () => [
                             h(WpButton, {
                                 onClick:ev => {
                                     (async() => {
@@ -88,7 +90,7 @@ export const alertPlug = (alertOptions:AlertOptions = {}) => {
                                     })()
                                 }
                             }, {
-                                default:() => '取消'
+                                default:() => options.cancelText || '取消'
                             }),
                             h(WpButton, {
                                 type:'primary',
@@ -104,9 +106,9 @@ export const alertPlug = (alertOptions:AlertOptions = {}) => {
                                     })()
                                 }
                             }, {
-                                default:() => '确定'
+                                default:() => options.confirmText || '确定'
                             })
-                        ]),
+                        ] : null),
                     ]
                 }
             }))
