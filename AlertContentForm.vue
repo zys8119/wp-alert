@@ -13,7 +13,7 @@
 import AlertContent from "./AlertContent.vue"
 import AlertFooter from "./AlertFooter.vue"
 import {FormDataMapType, ConfigType} from "./index"
-import {getCurrentInstance, ref, provide, defineProps, defineEmits} from "vue"
+import {getCurrentInstance, ref, provide, defineProps, defineEmits, watch} from "vue"
 const vm = getCurrentInstance()
 const props = defineProps<{
     row?:any
@@ -22,12 +22,23 @@ const props = defineProps<{
     successMessage?:string
     footerProps?:any
     initData?:any
+    modelValue:any
 }>()
 
 const formDataMap = ref <FormDataMapType>(props.config)
-const formData = ref<any>((Object as any).fromEntries(Object.keys(formDataMap.value).map((e:any) => [e, ((props.row || {})[e]) || ((props.initData || {})[e])])))
+const formData = ref<any>((Object as any).fromEntries(Object.keys(formDataMap.value).map((e:any) => [
+    e,
+    (((props.initData || {})[e]) || ((props.row || {})[e]) )
+])))
 
-const emit = defineEmits(['save', 'add', 'edit'])
+
+const emit = defineEmits(['save', 'add', 'edit', 'update:modelValue'])
+watch(formData, (v:any)=>{
+    emit('update:modelValue', v)
+}, {
+    deep:true,
+    immediate:true
+})
 const save = async() => {
     const isNotVerifyKeyName:string = Object.keys(formData.value).find((k:any) => !formData.value[k] || (formDataMap.value[k] as any)?.check?.(formData.value[k])) as string
     const {msg, check} = formDataMap.value[isNotVerifyKeyName] as ConfigType || {}
