@@ -67,6 +67,7 @@ app.use(alert, {
     CommonModalHeader
     AlertFooter
     AlertContent
+    AlertContentForm
 
 vite.config.ts
 
@@ -92,6 +93,22 @@ export default defineConfig({
 ```
 
 ## 内置组件介绍
+
+### CommonModalHeader.vue
+
+弹框公共头部
+
+#### Props
+
+| 名称    | 描述       |
+|-------|----------|
+| showClose | 是否显示关闭按钮 |
+
+#### Slot
+
+| 名称    | 描述  |
+|-------|-----|
+| title | 标题  |
 
 ### AlertContent.vue
 
@@ -122,20 +139,27 @@ export default defineConfig({
 |---------|------|
 | default | 默认插槽 |
 
+#### Emits
+
+| 名称      | 描述  | 参数             |
+|---------|-----|----------------|
+| cancel | 取消  | (evt:any)=>any |
+| save | 保存  | (evt:any)=>any   |
+
 ### AlertContentForm.vue
 
 弹框内容
 
 #### Props
 
-| 名称      | 描述                       |
-|---------|--------------------------|
-| row | 隐藏取消按钮                   |
-| isView | 隐藏确定按钮                   |
-| config | 表单配置：请参考示例               |
-| successMessage | 成功回调提示语                  |
+| 名称      | 描述                        |
+|---------|---------------------------|
+| row | 编辑回显数据                    |
+| isView | 是否为编辑状态                   |
+| config | 表单配置：请参考示例                |
+| successMessage | 成功回调提示语                   |
 | footerProps | 尾部参数， 请参考：AlertFooter.vue |
-| initData | 初始数据                     |
+| initData | 初始数据                      |
 
 #### Slot
 
@@ -143,6 +167,13 @@ export default defineConfig({
 |---------|----------|
 | default | 表单内容默认插槽 |
 | footer | footer插槽 |
+
+#### Emits
+
+| 名称   | 描述  | 参数                       |
+|------|-----|--------------------------|
+| add  | 保存  | (data:any)=>any          |
+| edit | 编辑  | (data:any, row:any)=>any |
 
 #### 使用示例：
 

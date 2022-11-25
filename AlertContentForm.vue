@@ -14,6 +14,7 @@ import AlertContent from "./AlertContent.vue"
 import AlertFooter from "./AlertFooter.vue"
 import {FormDataMapType, ConfigType} from "./index"
 import {getCurrentInstance, ref, provide, defineProps, defineEmits, watch} from "vue"
+import {merge} from "lodash"
 const vm = getCurrentInstance()
 const props = defineProps<{
     row?:any
@@ -22,13 +23,14 @@ const props = defineProps<{
     successMessage?:string
     footerProps?:any
     initData?:any
-    modelValue:any
+    modelValue?:any
+    format?(value:any, row:any, key:string):any
 }>()
 
-const formDataMap = ref <FormDataMapType>(props.config)
+const formDataMap = ref <FormDataMapType>(merge({}, props.config))
 const formData = ref<any>((Object as any).fromEntries(Object.keys(formDataMap.value).map((e:any) => [
     e,
-    (((props.initData || {})[e]) || ((props.row || {})[e]) )
+    props.format?.((((props.initData || {})[e]) || ((props.row || {})[e]) ), props.row, e)
 ])))
 
 
@@ -48,14 +50,18 @@ const save = async() => {
         return window.$toast.error((value ? checkMsg : ( msg || formDataMap.value[isNotVerifyKeyName])) as string)
     }
     const events = (vm?.vnode?.props as Record<string, any>)
+    let apiRes = false
     if (props.row) {
-        await events?.onEdit(formData.value, props.row)
+        apiRes = await events?.onEdit(formData.value, props.row)
     } else {
-        await events?.onAdd(formData.value)
+        apiRes = await events?.onAdd(formData.value)
     }
-    window.$toast.success(props.successMessage || '保存成功')
-    emit('save')
-    return true
+    if(apiRes !== true){
+        window.$toast.success(props.successMessage || '保存成功')
+        emit('save')
+        return true
+    }
+
 }
 
 provide('acf-formData', formData)
