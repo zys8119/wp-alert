@@ -27,7 +27,7 @@ const props = defineProps<{
     format?(value:any, row:any, key:string):any
 }>()
 
-const formDataMap = ref <FormDataMapType>(merge({}, props.config))
+const formDataMap = ref <FormDataMapType>(Object.assign({}, props.config))
 const formData = ref<any>((Object as any).fromEntries(Object.keys(formDataMap.value).map((e:any) => [
     e,
     props.format?.((((props.initData || {})[e]) || ((props.row || {})[e]) ), props.row, e)
