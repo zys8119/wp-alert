@@ -171,10 +171,11 @@ export default defineConfig({
 
 #### Emits
 
-| 名称   | 描述  | 参数                       |
-|------|-----|--------------------------|
-| add  | 保存  | (data:any)=>any          |
-| edit | 编辑  | (data:any, row:any)=>any |
+| 名称    | 描述 | 参数                       |
+|-------|--|--------------------------|
+| add   | 保存 | (data:any)=>any          |
+| edit  | 编辑 | (data:any, row:any)=>any |
+| error | 错误回调 | (error:any)=>any |
 
 #### 使用示例：
 

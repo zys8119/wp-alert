@@ -27,13 +27,16 @@ const props = defineProps<{
 }>()
 
 const formDataMap = ref <FormDataMapType>(Object.assign({}, props.config))
-const formData = ref<any>((Object as any).fromEntries(Object.keys(formDataMap.value).map((e:any) => [
-    e,
-    props.format?.((((props.initData || {})[e]) || ((props.row || {})[e]) ), props.row, e)
-])))
+const formData = ref<any>((Object as any).fromEntries(Object.keys(formDataMap.value).map((e:any) => {
+    const value = (((props.initData || {})[e]) || ((props.row || {})[e]) )
+    return [
+        e,
+        props.format?.(value, props.row, e) || value
+    ]
+})))
 
 
-const emit = defineEmits(['save', 'add', 'edit', 'update:modelValue'])
+const emit = defineEmits(['save', 'add', 'edit', 'error', 'update:modelValue'])
 watch(formData, (v:any)=>{
     emit('update:modelValue', v)
 }, {
@@ -41,26 +44,29 @@ watch(formData, (v:any)=>{
     immediate:true
 })
 const save = async() => {
-    const isNotVerifyKeyName:string = Object.keys(formData.value).find((k:any) => !formData.value[k] || (formDataMap.value[k] as any)?.check?.(formData.value[k])) as string
-    const {msg, check} = formDataMap.value[isNotVerifyKeyName] as ConfigType || {}
-    const value = formData.value[isNotVerifyKeyName]
-    const checkMsg = check?.(value)
-    if (isNotVerifyKeyName || checkMsg) {
-        return window.$toast.error((value ? checkMsg : ( msg || formDataMap.value[isNotVerifyKeyName])) as string)
-    }
     const events = (vm?.vnode?.props as Record<string, any>)
-    let apiRes = false
-    if (props.row) {
-        apiRes = await events?.onEdit(formData.value, props.row)
-    } else {
-        apiRes = await events?.onAdd(formData.value)
+    try {
+        const isNotVerifyKeyName:string = Object.keys(formData.value).find((k:any) => !formData.value[k] || (formDataMap.value[k] as any)?.check?.(formData.value[k])) as string
+        const {msg, check} = formDataMap.value[isNotVerifyKeyName] as ConfigType || {}
+        const value = formData.value[isNotVerifyKeyName]
+        const checkMsg = check?.(value)
+        if (isNotVerifyKeyName || checkMsg) {
+            return window.$toast.error((value ? checkMsg : ( msg || formDataMap.value[isNotVerifyKeyName])) as string)
+        }
+        let apiRes = false
+        if (props.row) {
+            apiRes = await events?.onEdit(formData.value, props.row)
+        } else {
+            apiRes = await events?.onAdd(formData.value)
+        }
+        if(apiRes !== true){
+            window.$toast.success(props.successMessage || '保存成功')
+            emit('save')
+            return true
+        }
+    }catch (e) {
+        await events?.onEdit(e)
     }
-    if(apiRes !== true){
-        window.$toast.success(props.successMessage || '保存成功')
-        emit('save')
-        return true
-    }
-
 }
 
 provide('acf-formData', formData)
