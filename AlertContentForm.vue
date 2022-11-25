@@ -13,7 +13,7 @@
 import AlertContent from "./AlertContent.vue"
 import AlertFooter from "./AlertFooter.vue"
 import {FormDataMapType, ConfigType} from "./index"
-import {getCurrentInstance, ref, provide, defineProps, defineEmits, watch} from "vue"
+import {getCurrentInstance, ref, provide, defineProps, defineEmits, watch, computed} from "vue"
 const vm = getCurrentInstance()
 const props = defineProps<{
     row?:any
@@ -26,19 +26,30 @@ const props = defineProps<{
     format?(value:any, row:any, key:string):any
 }>()
 
-const formDataMap = ref <FormDataMapType>(Object.assign({}, props.config))
-const formData = ref<any>((Object as any).fromEntries(Object.keys(formDataMap.value).map((e:any) => {
-    const value = (((props.initData || {})[e]) || ((props.row || {})[e]) )
-    return [
-        e,
-        props.format?.(value, props.row, e) || value
-    ]
-})))
+const formDataMap = ref <FormDataMapType>({})
+const formData = ref<any>({})
 
 
 const emit = defineEmits(['save', 'add', 'edit', 'error', 'update:modelValue'])
 watch(formData, (v:any)=>{
     emit('update:modelValue', v)
+}, {
+    deep:true,
+    immediate:true
+})
+watch([
+    computed(()=> props.config),
+    computed(()=> props.initData),
+    computed(()=> props.row),
+], ()=>{
+    formDataMap.value = Object.assign({}, props.config)
+    formData.value = (Object as any).fromEntries(Object.keys(formDataMap.value).map((e:any) => {
+        const value = (((props.initData || {})[e]) || ((props.row || {})[e]) )
+        return [
+            e,
+            props.format?.(value, props.row, e) || value
+        ]
+    }))
 }, {
     deep:true,
     immediate:true
