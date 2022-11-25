@@ -162,7 +162,6 @@ declare global {
 declare module '@vue/runtime-core' {
     export interface ComponentCustomProperties {
         $alert: typeof alertPlug;
-        $toast: typeof Toast;
         $Toast: typeof Toast;
     }
 }
