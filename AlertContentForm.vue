@@ -3,8 +3,10 @@
         <AlertContent>
             <slot :formData="formData"/>
         </AlertContent>
-        <alert-footer :hiddenConfirm="isView" v-bind="footerProps" @save="save">
-            <slot name="footer"/>
+        <alert-footer v-if="!hiddenFooter" :hiddenConfirm="isView" v-bind="footerProps" @save="save" :isH5="isH5">
+            <template #="{cancel, confirm}">
+                <slot name="footer"  :cancel="cancel" :confirm="confirm"/>
+            </template>
         </alert-footer>
     </div>
 </template>
@@ -24,6 +26,8 @@ const props = defineProps<{
     initData?:any
     modelValue?:any
     format?(value:any, row:any, key:string):any
+    hiddenFooter?:boolean
+    isH5?:boolean
 }>()
 
 const formDataMap = ref <FormDataMapType>({})

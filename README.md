@@ -132,6 +132,7 @@ export default defineConfig({
 | hiddenConfirm | 隐藏确定按钮 |
 | cancelText | 取消按钮文字 |
 | confirmText | 确定按钮文字 |
+| isH5 | 是否为h5  |
 
 #### Slot
 
@@ -161,6 +162,8 @@ export default defineConfig({
 | footerProps | 尾部参数， 请参考：AlertFooter.vue | any                                  |
 | initData | 初始数据                      | object                               |
 | format | 初始数据过滤器                   | (value:any, row:any, key:string):any |
+| hiddenFooter | 是否隐藏footer                | boolean                              |
+| isH5 | 是否为h5                     | boolean                              |
 
 #### Slot
 
