@@ -38,9 +38,9 @@ watch(formData, (v:any)=>{
     immediate:true
 })
 watch([
-    computed(()=> props.config),
-    computed(()=> props.initData),
-    computed(()=> props.row),
+    props.config,
+    props.initData,
+    props.row,
 ], ()=>{
     formDataMap.value = Object.assign({}, props.config)
     formData.value = (Object as any).fromEntries(Object.keys(formDataMap.value).map((e:any) => {
