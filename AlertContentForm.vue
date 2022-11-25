@@ -14,7 +14,6 @@ import AlertContent from "./AlertContent.vue"
 import AlertFooter from "./AlertFooter.vue"
 import {FormDataMapType, ConfigType} from "./index"
 import {getCurrentInstance, ref, provide, defineProps, defineEmits, watch} from "vue"
-import {merge} from "lodash"
 const vm = getCurrentInstance()
 const props = defineProps<{
     row?:any
