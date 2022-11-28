@@ -61,10 +61,10 @@ watch([
 const save = async() => {
     const events = (vm?.vnode?.props as Record<string, any>)
     try {
-        const isNotVerifyKeyName:string = Object.keys(formData.value).find((k:any) => !formData.value[k] || (formDataMap.value[k] as any)?.check?.(formData.value[k])) as string
+        const isNotVerifyKeyName:string = Object.keys(formData.value).find((k:any) => formDataMap.value[k] && (!formData.value[k] || (formDataMap.value[k] as any)?.check?.(formData.value[k]))) as string
         const {msg, check} = formDataMap.value[isNotVerifyKeyName] as ConfigType || {}
         const value = formData.value[isNotVerifyKeyName]
-        const checkMsg = check?.(value)
+        const checkMsg = await check?.(value)
         if (isNotVerifyKeyName || checkMsg) {
             return window.$toast.error((value ? checkMsg : ( msg || formDataMap.value[isNotVerifyKeyName])) as string)
         }
