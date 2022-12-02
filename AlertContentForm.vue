@@ -15,7 +15,7 @@
 import AlertContent from "./AlertContent.vue"
 import AlertFooter from "./AlertFooter.vue"
 import {FormDataMapType, ConfigType} from "./index"
-import {getCurrentInstance, ref, provide, defineProps, defineEmits, watch, computed} from "vue"
+import {getCurrentInstance, ref, provide, defineProps, defineEmits, watch, computed, watchEffect} from "vue"
 const vm = getCurrentInstance()
 const props = defineProps<{
     row?:any
@@ -30,7 +30,9 @@ const props = defineProps<{
     isH5?:boolean
 }>()
 
-const formDataMap = ref <FormDataMapType>({})
+const formDataMap = computed<FormDataMapType>(()=>{
+    return props.config || {}
+})
 const formData = ref<any>({})
 
 
@@ -41,23 +43,17 @@ watch(formData, (v:any)=>{
     deep:true,
     immediate:true
 })
-watch([
-    props.config,
-    props.initData,
-    props.row,
-], ()=>{
-    formDataMap.value = Object.assign({}, props.config)
+
+watchEffect(()=>{
     formData.value = (Object as any).fromEntries(Object.keys(formDataMap.value).map((e:any) => {
-        const value = (((props.initData || {})[e]) || ((props.row || {})[e]) )
+        const value = (props.row || {})[e] || (props.initData || {})[e] || null
         return [
             e,
             props.format?.(value, props.row, e) || value
         ]
     }))
-}, {
-    deep:true,
-    immediate:true
 })
+
 const save = async() => {
     const events = (vm?.vnode?.props as Record<string, any>)
     try {
@@ -66,6 +62,7 @@ const save = async() => {
         const value = formData.value[isNotVerifyKeyName]
         const checkMsg = await check?.(value, formData.value)
         const error_msg = (checkMsg || msg || formDataMap.value[isNotVerifyKeyName])
+        console.log(isNotVerifyKeyName, error_msg)
         if (isNotVerifyKeyName && typeof error_msg === 'string') {
             return window.$toast.error(error_msg as string)
         }
