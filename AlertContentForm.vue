@@ -59,6 +59,11 @@ watch(formData, (v:any)=>{
     emit('update:modelValue', v)
 }, {deep:true, immediate:true})
 
+watch(computed(()=>props.modelValue), (v)=>{
+    for (let k in formData.value){
+        formData.value[k] = (props.modelValue || {})[k]
+    }
+}, {deep:true})
 const save = async() => {
     init(true)
     const events = (vm?.vnode?.props as Record<string, any>)
