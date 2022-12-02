@@ -45,7 +45,7 @@ const init = (bool:boolean)=>{
         const value = bool ? formData.value[e] : ((props.row || {})[e] || (props.initData || {})[e] || null)
         return [
             e,
-            props.format?.(value, props.row, e) || value
+            bool ? value : (props.format?.(value, props.row, e) || value)
         ]
     }))
 }
