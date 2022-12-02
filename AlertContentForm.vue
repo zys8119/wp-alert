@@ -62,7 +62,6 @@ const save = async() => {
         const value = formData.value[isNotVerifyKeyName]
         const checkMsg = await check?.(value, formData.value)
         const error_msg = (checkMsg || msg || formDataMap.value[isNotVerifyKeyName])
-        console.log(isNotVerifyKeyName, error_msg)
         if (isNotVerifyKeyName && typeof error_msg === 'string') {
             return window.$toast.error(error_msg as string)
         }
