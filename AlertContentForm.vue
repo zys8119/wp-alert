@@ -15,7 +15,7 @@
 import AlertContent from "./AlertContent.vue"
 import AlertFooter from "./AlertFooter.vue"
 import {FormDataMapType, ConfigType} from "./index"
-import {getCurrentInstance, ref, provide, defineProps, defineEmits, watch, computed, watchEffect} from "vue"
+import {getCurrentInstance, ref, provide, defineProps, defineEmits, watch, computed, watchEffect, defineExpose} from "vue"
 const vm = getCurrentInstance()
 const props = defineProps<{
     row?:any
@@ -26,35 +26,41 @@ const props = defineProps<{
     initData?:any
     modelValue?:any
     format?(value:any, row:any, key:string):any
+    getConfig?(config:FormDataMapType, formData:Record<any, any>):FormDataMapType | void
     hiddenFooter?:boolean
     isH5?:boolean
 }>()
 
-const formDataMap = computed<FormDataMapType>(()=>{
-    return props.config || {}
-})
+
 const formData = ref<any>({})
 
-
-const emit = defineEmits(['save', 'add', 'edit', 'error', 'update:modelValue'])
-watch(formData, (v:any)=>{
-    emit('update:modelValue', v)
-}, {
-    deep:true,
-    immediate:true
+const formDataMap = computed<FormDataMapType>(()=>{
+    return props.getConfig?.(JSON.parse(JSON.stringify(props.config)), formData.value) || props.config || {}
 })
 
-watchEffect(()=>{
+const emit = defineEmits(['save', 'add', 'edit', 'error', 'update:modelValue'])
+
+const init = (bool:boolean)=>{
     formData.value = (Object as any).fromEntries(Object.keys(formDataMap.value).map((e:any) => {
-        const value = (props.row || {})[e] || (props.initData || {})[e] || null
+        const value = bool ? formData.value[e] : ((props.row || {})[e] || (props.initData || {})[e] || null)
         return [
             e,
             props.format?.(value, props.row, e) || value
         ]
     }))
-})
+}
+watch([
+    computed(()=> props.config),
+    computed(()=> props.initData),
+    computed(()=> props.row),
+], ()=> init(false), {immediate:true})
+
+watch(formData, (v:any)=>{
+    emit('update:modelValue', v)
+}, {deep:true, immediate:true})
 
 const save = async() => {
+    init(true)
     const events = (vm?.vnode?.props as Record<string, any>)
     try {
         const isNotVerifyKeyName:string = Object.keys(formData.value).find((k:any) => formDataMap.value[k] && (!formData.value[k] || (formDataMap.value[k] as any)?.check?.(formData.value[k]))) as string
@@ -83,6 +89,11 @@ const save = async() => {
 
 provide('acf-formData', formData)
 provide('acf-save', formData)
+defineExpose({
+    formData,
+    formDataMap,
+    save
+})
 </script>
 
 <style scoped lang="less">

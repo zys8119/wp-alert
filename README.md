@@ -153,17 +153,18 @@ export default defineConfig({
 
 #### Props
 
-| 名称      | 描述                        | 参数                                   |
-|---------|---------------------------|--------------------------------------|
-| row | 编辑回显数据                    | object                               |
-| isView | 是否为编辑状态                   | boolean                              |
-| config | 表单配置：请参考示例                | object                               |
-| successMessage | 成功回调提示语                   | string                               |
-| footerProps | 尾部参数， 请参考：AlertFooter.vue | any                                  |
-| initData | 初始数据                      | object                               |
-| format | 初始数据过滤器                   | (value:any, row:any, key:string):any |
-| hiddenFooter | 是否隐藏footer                | boolean                              |
-| isH5 | 是否为h5                     | boolean                              |
+| 名称      | 描述                       | 参数                                                                           |
+|---------|--------------------------|------------------------------------------------------------------------------|
+| row | 编辑回显数据                   | object                                                                       |
+| isView | 是否为编辑状态                  | boolean                                                                      |
+| config | 表单配置：请参考示例               | object                                                                       |
+| successMessage | 成功回调提示语                  | string                                                                       |
+| footerProps | 尾部参数， 请参考：AlertFooter.vue | any                                                                          |
+| initData | 初始数据                     | object                                                                       |
+| format | 初始数据过滤器                  | (value:any, row:any, key:string):any                                         |
+| getConfig | 保存之前获取配置，可拦截config       | getConfig(config:FormDataMapType, formData:Record<any, any>):FormDataMapType |
+| hiddenFooter | 是否隐藏footer               | boolean                                                                      |
+| isH5 | 是否为h5                    | boolean                                                                      |
 
 #### Slot
 
