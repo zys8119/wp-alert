@@ -65,8 +65,9 @@ const save = async() => {
         const {msg, check} = formDataMap.value[isNotVerifyKeyName] as ConfigType || {}
         const value = formData.value[isNotVerifyKeyName]
         const checkMsg = await check?.(value)
-        if (isNotVerifyKeyName || checkMsg) {
-            return window.$toast.error((value ? checkMsg : ( msg || formDataMap.value[isNotVerifyKeyName])) as string)
+        const error_msg = ( msg || formDataMap.value[isNotVerifyKeyName])
+        if (!([null, false] as any).includes(error_msg) && (isNotVerifyKeyName || checkMsg)) {
+            return window.$toast.error((value ? checkMsg : error_msg) as string)
         }
         let apiRes = false
         if (props.row) {
