@@ -25,6 +25,7 @@
 </template>
 
 <script setup lang="ts">
+import {WpProPageLayout} from "wisdom-plus"
 const vm = getCurrentInstance()
 const tableEmits = computed<any>(() => {
     const res:any = {}
