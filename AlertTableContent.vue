@@ -1,5 +1,5 @@
 <template>
-    <div class="TableContent">
+    <div class="AlertTableContent">
         <wp-pro-page-layout
             ref="page"
             :form="form"
@@ -112,6 +112,6 @@ onBeforeMount(() => {
 </script>
 
 <style scoped lang="less">
-.TableContent {
+.AlertTableContent {
 }
 </style>
