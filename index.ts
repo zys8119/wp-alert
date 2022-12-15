@@ -6,13 +6,11 @@ import CommonModalHeader from './CommonModalHeader.vue'
 import AlertFooter from './AlertFooter.vue'
 import AlertContent from './AlertContent.vue'
 import AlertContentForm from './AlertContentForm.vue'
-import AlertTableContent from './AlertTableContent.vue'
 export {
     CommonModalHeader,
     AlertFooter,
     AlertContent,
     AlertContentForm,
-    AlertTableContent,
 }
 
 export type ConfigType = {

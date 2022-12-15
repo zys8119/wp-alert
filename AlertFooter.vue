@@ -12,8 +12,8 @@ import {defineProps, getCurrentInstance} from "vue"
 const props = defineProps<{
     hiddenCancel?:boolean
     hiddenConfirm?:boolean
-    cancelText?:boolean
-    confirmText?:boolean
+    cancelText?:string
+    confirmText?:string
     isH5?:boolean
 }>()
 const emits = defineEmits<{
