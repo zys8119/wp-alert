@@ -52,6 +52,8 @@ const init = (bool:boolean)=>{
 watch([
     computed(()=> props.config),
     computed(()=> props.initData),
+], ()=> init(true), {immediate:true})
+watch([
     computed(()=> props.row),
 ], ()=> init(false), {immediate:true})
 
