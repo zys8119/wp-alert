@@ -135,7 +135,7 @@ alertPlug.install = (app:any, options:AlertPlugConfig = {}) => {
 
 alertPlug.close = (index?:number) => {
     try {
-        const el:any = [...document.querySelectorAll('.common-wp-modal')].reverse()[index || 0]
+        const el:any = [...(document.querySelectorAll('.common-wp-modal') as any)].reverse()[index || 0]
         document.body.removeChild(el.parentElement)
         el.parentElement.__vueParentComponent.appContext.app.unmount()
     }catch (e){
