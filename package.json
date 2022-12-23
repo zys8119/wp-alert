@@ -1,6 +1,6 @@
 {
   "name": "wp-alert",
-  "version": "0.0.35",
+  "version": "0.0.36",
   "description": "wp-alert",
   "main": "index.ts",
   "scripts": {

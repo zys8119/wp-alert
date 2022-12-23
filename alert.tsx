@@ -139,7 +139,7 @@ alertPlug.close = (index?:number) => {
         document.body.removeChild(el.parentElement)
         el.parentElement.__vueParentComponent.appContext.app.unmount()
     }catch (e){
-        closeAllModals()
+        // closeAllModals()
     }
 }
 
