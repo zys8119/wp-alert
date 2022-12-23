@@ -133,7 +133,17 @@ alertPlug.install = (app:any, options:AlertPlugConfig = {}) => {
     app.component('common-modal-header', CommonModalHeader)
 }
 
-alertPlug.close = () => {
+alertPlug.close = (index?:number) => {
+    try {
+        const el:any = [...document.querySelectorAll('.common-wp-modal')].reverse()[index || 0]
+        document.body.removeChild(el.parentElement)
+        el.parentElement.__vueParentComponent.appContext.app.unmount()
+    }catch (e){
+        closeAllModals()
+    }
+}
+
+alertPlug.closeAll = () => {
     closeAllModals()
 }
 interface AlertOptionsConfig {
