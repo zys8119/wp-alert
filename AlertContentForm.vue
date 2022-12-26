@@ -90,7 +90,7 @@ const save = async() => {
             return true
         }
     }catch (e) {
-        await events?.onEdit(e)
+        await events?.onError(e)
     }
 }
 
